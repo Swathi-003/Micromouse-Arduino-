@@ -1,0 +1,70 @@
+#include <Servo.h>
+
+// Define pin numbers for motor control
+const int leftMotorPin = 9;
+const int rightMotorPin = 10;
+
+// Define pin numbers for sensor inputs
+const int leftSensorPin = A0;
+const int rightSensorPin = A1;
+
+// Define threshold values for line following
+const int threshold = 500; // Adjust this value based on your sensors
+
+// Define servo for direction control
+Servo servo;
+
+void setup() {
+  // Initialize motors
+  pinMode(leftMotorPin, OUTPUT);
+  pinMode(rightMotorPin, OUTPUT);
+
+  // Initialize servo
+  servo.attach(8); // Use the appropriate pin for servo control
+
+  // Initialize serial communication if needed
+  // Serial.begin(9600);
+}
+
+void loop() {
+  // Read sensor values
+  int leftSensorValue = analogRead(leftSensorPin);
+  int rightSensorValue = analogRead(rightSensorPin);
+
+  // Check if both sensors detect the line
+  if (leftSensorValue > threshold && rightSensorValue > threshold) {
+    // Both sensors on the line, move forward
+    moveForward();
+  } else if (leftSensorValue > threshold) {
+    // Only left sensor on the line, turn right
+    turnRight();
+  } else if (rightSensorValue > threshold) {
+    // Only right sensor on the line, turn left
+    turnLeft();
+  } else {
+    // No sensors on the line, stop or perform other actions
+    stopMotors();
+  }
+}
+
+void moveForward() {
+  digitalWrite(leftMotorPin, HIGH);
+  digitalWrite(rightMotorPin, HIGH);
+}
+
+void turnLeft() {
+  digitalWrite(leftMotorPin, LOW);
+  digitalWrite(rightMotorPin, HIGH);
+}
+
+void turnRight() {
+  digitalWrite(leftMotorPin, HIGH);
+  digitalWrite(rightMotorPin, LOW);
+}
+
+void stopMotors() {
+  digitalWrite(leftMotorPin, LOW);
+  digitalWrite(rightMotorPin, LOW);
+}
+
+// Add maze-solving algorithms and other functionality as needed
